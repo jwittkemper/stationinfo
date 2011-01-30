@@ -45,7 +45,7 @@ public class StatistikTabModel extends AbstractTableModel {
 	@Override
 	public int getRowCount() {
 		if (data.size() > 0) {
-			return data.size()-1;
+			return data.size();
 		} else {
 			return 0;
 		}
