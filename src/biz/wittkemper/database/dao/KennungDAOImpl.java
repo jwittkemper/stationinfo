@@ -59,9 +59,25 @@ public class KennungDAOImpl extends AbstractDAOImpl<Kennung, Long> implements
 			auswertung.add(statisik);
 		}
 		
-		return auswertung;
+		return orderAswertung( auswertung);
 	}
 	
+	private List<KennungStatisik> orderAswertung(
+			List<KennungStatisik> auswertung) {
+
+		List<KennungStatisik> lhelp = new ArrayList<KennungStatisik>();
+		for (int i=0; i < auswertung.size(); i++){
+			for(int j=0;j<auswertung.size(); j++){
+				if(auswertung.get(i).getLetzteMeldung().after(auswertung.get(j).getLetzteMeldung())){
+					KennungStatisik k = auswertung.get(i);
+					auswertung.set(i, auswertung.get(j));
+					auswertung.set(j,k);
+				}
+			}
+		}
+		return auswertung;
+	}
+
 	@Override
 	protected Class<Kennung> getDomainClass() {
 		return Kennung.class;
