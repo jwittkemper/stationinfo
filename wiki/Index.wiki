@@ -1,0 +1,6 @@
+= StationInfoSystem =
+
+Herzlich willkommen im Wiki zum Projekt StationInfoSystem. 
+
+Inhaltsverzeichniss:
+  * Projekt- Systembeschreibung
