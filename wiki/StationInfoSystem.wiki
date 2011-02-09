@@ -1,0 +1,8 @@
+#summary One-sentence summary of this page.
+
+= Informationen zum StationInfoSystem =
+
+StationInfoSystem ist ein Informations System für Feuerwachen.<br>
+Es kann eingehende POSAC Meldungen als Alarmmeldung anzeigen und so den 
+Einsatzkräften benötigte Informationen zum anstehenden Einsatz geben.<br>
+In der Zeit in der keine Meldungen anstehen, wechselt die Anzeige zwischen einem Kalender (anstehende Termine) einer Statistik und weiteren Informationen die intressant sind. 
