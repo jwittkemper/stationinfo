@@ -3,4 +3,4 @@
 Herzlich willkommen im Wiki zum Projekt StationInfoSystem. 
 
 Inhaltsverzeichniss:
-  * [Articles Projekt- Systembeschreibung]
+  * [StationInfoSystem   Projekt- Systembeschreibung]
