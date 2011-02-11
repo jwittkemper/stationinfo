@@ -13,20 +13,23 @@ public class FrameFactory {
 	public FrameFactory(){
 		frames.add(null);
 		frames.add(new FStatistik());
+		frames.add(new FKalender());
 		currentFrame =0;
 	}
 	
 	public JInternalFrame getNextFrame(){
 		
 		currentFrame ++;
-		if (currentFrame > 1){
+		if (currentFrame > frames.size()){
 			currentFrame =0;
 		}
 		switch (currentFrame)
 		{
 			case 0: return null;
 			
-			case 1: return new FStatistik();
+			case 1: return new FKalender();
+			
+			case 2: return new FStatistik();
 			
 			default: return null;
 		}
