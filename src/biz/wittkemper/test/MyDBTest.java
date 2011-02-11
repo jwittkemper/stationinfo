@@ -11,16 +11,23 @@ import org.junit.Test;
 import biz.wittkemper.database.dao.DAOFactory;
 import biz.wittkemper.database.dao.SessionFactotyUtil;
 import biz.wittkemper.database.entity.Alarmierung;
+import biz.wittkemper.database.entity.Kalender;
 import biz.wittkemper.database.entity.KalenderTyp;
 import biz.wittkemper.database.entity.Kennung;
 import biz.wittkemper.database.entity.KennungStatisik;
 import biz.wittkemper.database.entity.Monitord_POSAC;
 import biz.wittkemper.database.entity.Posac_status;
+import biz.wittkemper.gui.FKalender;
 
 public class MyDBTest {
 
 
 	@Test
+	public void checkKalender(){
+		FKalender fKalender = new FKalender();
+		fKalender.run();
+	}
+	@Ignore
 	public void checkStatistik(){
 		
 		
