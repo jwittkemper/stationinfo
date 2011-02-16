@@ -72,7 +72,11 @@ public class KonvertMessage extends TimerTask{
 	public void trageAlarmEin(Monitord_POSAC mp) {
 		Alarmierung alarmierung = new Alarmierung();
 		alarmierung.setKennung(DAOFactory.getInstance().getKennungDAO().load(Long.parseLong(mp.getKennung())));
-		alarmierung.setText(mp.getText());
+		if (alarmierung.getKennung().getAusblenden()== true){
+			alarmierung.setText("");
+		}else {
+			alarmierung.setText(mp.getText());
+		}
 		alarmierung.setUhrzeit(mp.getUhrzeit());
 		chekEOT(mp, alarmierung);
 		alarmierung.setStatus(DAOFactory.getInstance().getPosacStatusDAO().findByStatus(Integer.parseInt(mp.getSub())));
