@@ -27,6 +27,8 @@ public class Kennung implements Serializable{
 	private static final long serialVersionUID = 2180240926117772807L;
 	private Long ric;
 	private String bezeichnung;
+	private Boolean ausblenden;
+	
 	private List<Alarmierung> alarmierungen = new ArrayList<Alarmierung>();
 	
 	@Id
@@ -46,6 +48,13 @@ public class Kennung implements Serializable{
 		this.bezeichnung = bezeichnung;
 	}
 	
+	public Boolean getAusblenden() {
+		return ausblenden;
+	}
+	public void setAusblenden(Boolean ausblenden) {
+		this.ausblenden = ausblenden;
+	}
+	
 	@OneToMany(mappedBy="kennung" , fetch= FetchType.EAGER)
 	public List<Alarmierung> getAlarmierungen() {
 		return alarmierungen;
@@ -53,7 +62,5 @@ public class Kennung implements Serializable{
 	public void setAlarmierungen(List<Alarmierung> alarmierungen) {
 		this.alarmierungen = alarmierungen;
 	}
-	
-	
 
 }

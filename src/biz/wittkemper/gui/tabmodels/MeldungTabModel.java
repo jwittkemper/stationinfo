@@ -71,7 +71,7 @@ public class MeldungTabModel extends AbstractTableModel {
 			return getHTMLText(al.getStatus().getText(),10);
 
 		case IX_MELDUNG:
-			return getHTMLText(al.getText(),25);
+			return getMeldung(al);
 
 		case IX_ALTER:
 			return getHTMLText(berechneAlter(al),25);
@@ -80,6 +80,16 @@ public class MeldungTabModel extends AbstractTableModel {
 		}
 	}
 
+	private String getMeldung(Alarmierung al){
+		String lreturn="";
+		
+		if (al.getKennung().getAusblenden() == false){
+			lreturn = getHTMLText(al.getText(),25);
+		}else{
+			lreturn ="";
+		}
+		return lreturn;
+	}
 	private String getHTMLText(String text, int anzahl) {
 		String lreturn ="<HTML>";
 		lreturn += getUmbruch(text, anzahl);
