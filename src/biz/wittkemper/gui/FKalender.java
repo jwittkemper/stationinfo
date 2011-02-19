@@ -1,5 +1,6 @@
 package biz.wittkemper.gui;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.beans.PropertyVetoException;
@@ -64,15 +65,19 @@ public class FKalender extends javax.swing.JInternalFrame implements IGUI {
 			this.setBounds(0, 0, 764, 520);
 			GroupLayout thisLayout = new GroupLayout((JComponent)getContentPane());
 			getContentPane().setLayout(thisLayout);
-			getContentPane().setBackground(new java.awt.Color(173,216,230));
+			getContentPane().setBackground(new Color(65, 105, 225));
 			{
 				jScrollPane1 = new JScrollPane();
 				jScrollPane1.setOpaque(true);
 				{
 					tabkalender = new JXTable();
+					jScrollPane1.setOpaque(false);
+					jScrollPane1.getViewport().setBackground(new Color(0, 0, 0, 0));
 					jScrollPane1.setViewportView(tabkalender);
 					tabkalender.setModel(kaltab);
 					tabkalender.setFont(new java.awt.Font("Arial", 1, 32));
+					tabkalender.setOpaque(false);
+					tabkalender.setBackground(new Color(0, 0, 0, 0));
 					tabkalender.setHighlighters(HighlighterFactory.createAlternateStriping());
 					tabkalender.setRowHeight(140);
 				}

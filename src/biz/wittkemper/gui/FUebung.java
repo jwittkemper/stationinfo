@@ -79,7 +79,7 @@ public class FUebung extends JInternalFrame implements IGUI {
 		String wann = "";
 		Kalender kal = DAOFactory.getInstance().getKalenderDAO()
 				.getnextUebung();
-		sb.append("\n\nDer nächste Übungsdienst ist am: \n\n");
+		sb.append("\n\nDer nächster Übungsdienst ist am: \n\n");
 		if (kal != null) {
 			sb.append(frameUtils.getDateFormat(kal.getDatum()) + " Uhr\n");
 			tage = frameUtils.getDateDiff(new Date(), kal.getDatum());
