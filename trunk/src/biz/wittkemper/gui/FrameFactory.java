@@ -14,6 +14,7 @@ public class FrameFactory {
 		frames.add(null);
 		frames.add(new FStatistik());
 		frames.add(new FKalender());
+		frames.add(new FUebung());
 		currentFrame =0;
 	}
 	
@@ -27,10 +28,11 @@ public class FrameFactory {
 		{
 			case 0: return null;
 			
-			case 1: return new FKalender();
+			case 1: return new FUebung();
 			
 			case 2: return new FStatistik();
 			
+			case 3: return new FKalender();
 			default: return null;
 		}
 	}

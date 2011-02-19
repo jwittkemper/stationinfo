@@ -45,4 +45,32 @@ public class KalenderDAOImpl extends AbstractDAOImpl<Kalender, Integer>
 		}
 	}
 
+	@Override
+	public Kalender getnextUebung() {
+		Kalender kal;
+		Calendar calendar = new GregorianCalendar();
+		calendar.setTime(new Date());
+		Date startTime = calendar.getTime();
+		
+		String hql =" FROM Kalender Where datum >= :startTime";
+		hql+= " and kalenderTyp.id = 2 ";
+		hql += " Order by datum ";
+		
+		Session session = SessionFactotyUtil.getInstance().getCurrentSession();
+		Transaction trx = session.beginTransaction();
+		
+		Query query = session.createQuery(hql.toString());
+		query.setParameter("startTime", startTime);
+		List<Kalender> list = query.list();
+		trx.commit();		
+		
+		if (list.size()> 0){
+			kal = list.get(0);
+		}else{
+			kal = null;
+		}
+		
+		return kal;
+	}
+
 }

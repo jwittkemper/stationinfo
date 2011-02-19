@@ -18,14 +18,19 @@ import biz.wittkemper.database.entity.KennungStatisik;
 import biz.wittkemper.database.entity.Monitord_POSAC;
 import biz.wittkemper.database.entity.Posac_status;
 import biz.wittkemper.gui.FKalender;
+import biz.wittkemper.utils.FrameUtils;
 
 public class MyDBTest {
 
 
 	@Test
 	public void checkKalender(){
-		FKalender fKalender = new FKalender();
-		fKalender.run();
+		FrameUtils frameUtils = new FrameUtils();
+		Kalender kal = DAOFactory.getInstance().getKalenderDAO().getnextUebung();
+		
+		if (kal != null){
+			System.out.println( frameUtils.getDateDiff(new Date(), kal.getDatum()));
+		}
 	}
 	@Ignore
 	public void checkStatistik(){

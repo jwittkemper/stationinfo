@@ -9,4 +9,6 @@ public interface KalenderDAO extends AbstractDAO<Kalender, Integer> {
 
 	List<Kalender> getKalender();
 
+	Kalender getnextUebung();
+
 }
