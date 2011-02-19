@@ -90,7 +90,7 @@ public class MainFrame extends javax.swing.JFrame implements WindowListener,
 					meldungsMelder), 2000, 25000);
 
 			nextFrame.schedule(new InfoTimer(meldungsMelder), 5000,
-					(1000 * 60 * 3));
+					(1000 * 60 * 2));
 		}
 		{
 			MainDesktop = new JDesktopPane();
