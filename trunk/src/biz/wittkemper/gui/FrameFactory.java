@@ -28,11 +28,12 @@ public class FrameFactory {
 		{
 			case 0: return null;
 			
-			case 1: return new FUebung();
+			case 1: return  new FUebung();
 			
 			case 2: return new FStatistik();
 			
 			case 3: return new FKalender();
+			
 			default: return null;
 		}
 	}

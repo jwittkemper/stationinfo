@@ -1,5 +1,6 @@
 package biz.wittkemper.gui;
 
+import java.awt.Color;
 import java.beans.PropertyVetoException;
 import java.util.List;
 
@@ -61,13 +62,15 @@ public class FStatistik extends javax.swing.JInternalFrame implements IGUI {
 			getContentPane().setLayout(thisLayout);
 
 			this.setPreferredSize(new java.awt.Dimension(780, 527));
-			getContentPane().setBackground(new java.awt.Color(144, 238, 144));
+			getContentPane().setBackground(new Color(127, 255, 0));
 			this.setTitle("Statistik");
 			this.setIcon(false);
 			this.setMaximizable(false);
 			{
 				jScrollPane1 = new JScrollPane();
 				jScrollPane1.setOpaque(false);
+				jScrollPane1.setBackground(new Color(0, 0, 0, 0));
+				jScrollPane1.getViewport().setBackground(new Color(0, 0, 0, 0));
 				{
 
 					HighlighterFactory.createAlternateStriping();
@@ -81,6 +84,7 @@ public class FStatistik extends javax.swing.JInternalFrame implements IGUI {
 					tabMelder.setFont(new java.awt.Font("Arial",0,36));
 					tabMelder.setRowHeight(70);
 					tabMelder.setOpaque(false);
+					tabMelder.setBackground(new Color(0, 0, 0, 0));
 					tabMelder.setColumnControlVisible(true);
 					tabMelder.setAutoscrolls(false);
 					tabMelder.setAutoStartEditOnKeyStroke(false);
