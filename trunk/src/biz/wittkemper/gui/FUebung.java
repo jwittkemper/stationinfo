@@ -30,7 +30,8 @@ public class FUebung extends JInternalFrame implements IGUI {
 	private static final long serialVersionUID = 1L;
 	private FrameUtils frameUtils = new FrameUtils();
 	JTextPane textArea = new JTextPane();
-
+	private boolean initOK;
+	
 	public FUebung() {
 		super("Übung", false, false, false);
 		getContentPane().setBackground(new Color(255, 165, 0));
@@ -55,8 +56,11 @@ public class FUebung extends JInternalFrame implements IGUI {
 
 	}
 
+	
 	@Override
 	public void run() {
+		initOK= false;
+		setName("FUebung");
 		setText();
 		setVisible(true);
 		try {
@@ -64,6 +68,8 @@ public class FUebung extends JInternalFrame implements IGUI {
 		} catch (PropertyVetoException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}finally{
+			initOK = true;
 		}
 
 	}
@@ -115,5 +121,11 @@ public class FUebung extends JInternalFrame implements IGUI {
 	public void stop() {
 		// TODO Auto-generated method stub
 
+	}
+
+
+	@Override
+	public boolean InitOK() {
+		return initOK;
 	}
 }

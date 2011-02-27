@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.Date;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Timer;
@@ -202,12 +203,11 @@ public class MainFrame extends javax.swing.JFrame implements WindowListener,
 				if (com instanceof FMeldungsDisplay) {
 					return;
 				} else if (com instanceof JInternalFrame) {
-					JInternalFrame iframe = (JInternalFrame) com;
-					iframe.setVisible(false);
-					iframe.dispose();
+					System.out.println(com.getName() + " wird für Alarm geschlossen." + new Date());
+					closeInfFrame();
 				}
 			}
-
+			System.out.println("Alarm kommt " + new Date());
 			FMeldungsDisplay display = new FMeldungsDisplay(this,
 					meldungsMelder);
 			display.setSize(MainDesktop.getSize());
@@ -239,6 +239,7 @@ public class MainFrame extends javax.swing.JFrame implements WindowListener,
 					MainDesktop.add(newframe);
 					if (newframe instanceof IGUI) {
 						((IGUI) newframe).run();
+						System.out.println(newframe.getName() + " gestartet " + new Date());
 					}
 				}
 			}
@@ -251,7 +252,13 @@ public class MainFrame extends javax.swing.JFrame implements WindowListener,
 		for (Component com : MainDesktop.getComponents()) {
 			if (com instanceof FMeldungsDisplay) {
 				return;
-			} else if (com instanceof JInternalFrame) {
+			} else if (com instanceof IGUI) {
+				System.out.println( com.getName() + " wechsel..." + new Date() );
+				IGUI igui = (IGUI) com;
+				while (igui.InitOK()== false){
+					System.out.println(com.getName() + " warte auf initOK");
+				}
+				
 				com.setVisible(false);
 				((JInternalFrame) com).dispose();
 			}
