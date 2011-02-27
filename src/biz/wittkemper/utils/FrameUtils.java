@@ -43,10 +43,15 @@ public class FrameUtils {
 	}
 
 	public int getDateDiff(Date date1, Date date2) {
+		
+		if (date1 == null || date2 ==null){
+			return 0;
+		}
 		Calendar cal1 = new GregorianCalendar();
 		Calendar cal2 = new GregorianCalendar();
 		cal1.setTime(date1); // erster Zeitpunkt
 		cal2.setTime(date2); // zweiter Zeitpunkt
+		
 		long time = cal2.getTime().getTime() - cal1.getTime().getTime(); // Differenz
 																			// in
 																			// ms

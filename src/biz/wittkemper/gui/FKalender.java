@@ -38,24 +38,11 @@ public class FKalender extends javax.swing.JInternalFrame implements IGUI {
 	private JScrollPane jScrollPane1;
 	private JLabel jLabel1;
 	private KalenderTabModel kaltab = new KalenderTabModel();
-	/**
-	 * Auto-generated main method to display this JInternalFrame inside a new
-	 * JFrame.
-	 */
-	public static void main(String[] args) {
-		JFrame frame = new JFrame();
-		FKalender inst = new FKalender();
-		JDesktopPane jdp = new JDesktopPane();
-		jdp.add(inst);
-		jdp.setPreferredSize(inst.getPreferredSize());
-		frame.setContentPane(jdp);
-		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		frame.pack();
-		frame.setVisible(true);
-	}
-
+	private boolean initOK;
+	
 	public FKalender() {
 		super();
+		setName("FKalender");
 		initGUI();
 	}
 
@@ -110,13 +97,15 @@ public class FKalender extends javax.swing.JInternalFrame implements IGUI {
 
 	@Override
 	public void run() {
+		initOK = false;
 		try {
 			loadData();
 			setVisible(true);
 			setMaximum(true);
 		} catch (PropertyVetoException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println(e.getMessage());
+		}finally{
+			initOK = true;
 		}
 
 	}
@@ -156,6 +145,11 @@ public class FKalender extends javax.swing.JInternalFrame implements IGUI {
 	public void stop() {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public boolean InitOK() {
+		return initOK;
 	}
 
 }

@@ -33,6 +33,9 @@ public class FStatistik extends javax.swing.JInternalFrame implements IGUI {
 	private JScrollPane jScrollPane1;
 	private JLabel jLabel1;
 	StatistikTabModel tabModel ;
+	private boolean initOK;
+	
+	
 	/**
 	 * Auto-generated main method to display this JInternalFrame inside a new
 	 * JFrame.
@@ -41,6 +44,7 @@ public class FStatistik extends javax.swing.JInternalFrame implements IGUI {
 	public FStatistik() {
 
 		super("Statistik", false, false, false);
+		setName("FStatistik");
 		initGUI();
 	}
 
@@ -122,6 +126,7 @@ public class FStatistik extends javax.swing.JInternalFrame implements IGUI {
 
 	@Override
 	public void run() {
+		initOK = false;
 		try {
 			zeigeStatistik();
 			setVisible(true);
@@ -130,13 +135,21 @@ public class FStatistik extends javax.swing.JInternalFrame implements IGUI {
 			
 		} catch (Exception ex) {
 			ex.printStackTrace();
+		}finally{
+			initOK=true;
 		}
+		
 	}
 
 	@Override
 	public void stop() {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public boolean InitOK() {
+		return initOK;
 	}
 
 }
