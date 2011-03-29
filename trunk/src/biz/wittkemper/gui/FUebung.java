@@ -1,12 +1,13 @@
 package biz.wittkemper.gui;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.beans.PropertyVetoException;
 import java.util.Date;
 
 import javax.swing.GroupLayout;
 import javax.swing.JInternalFrame;
-import javax.swing.JTextArea;
+import javax.swing.JTextPane;
 import javax.swing.UIManager;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.text.BadLocationException;
@@ -19,8 +20,6 @@ import javax.swing.text.StyledDocument;
 import biz.wittkemper.database.dao.DAOFactory;
 import biz.wittkemper.database.entity.Kalender;
 import biz.wittkemper.utils.FrameUtils;
-import javax.swing.JTextPane;
-import java.awt.Color;
 
 public class FUebung extends JInternalFrame implements IGUI {
 
@@ -30,10 +29,12 @@ public class FUebung extends JInternalFrame implements IGUI {
 	private static final long serialVersionUID = 1L;
 	private FrameUtils frameUtils = new FrameUtils();
 	JTextPane textArea = new JTextPane();
-	private boolean initOK;
 	
 	public FUebung() {
-		super("Übung", false, false, false);
+		super();
+		this.setPreferredSize(new java.awt.Dimension(764, 520));
+		this.setBounds(0, 0, 764, 520);
+		setName("FUebung");
 		getContentPane().setBackground(new Color(255, 165, 0));
 
 		GroupLayout groupLayout = new GroupLayout(getContentPane());
@@ -59,19 +60,20 @@ public class FUebung extends JInternalFrame implements IGUI {
 	
 	@Override
 	public void run() {
-		initOK= false;
-		setName("FUebung");
+		System.out.println("RUN STEP 1");
 		setText();
+		System.out.println("RUN STEP 2");
 		setVisible(true);
 		try {
-			setMaximum(true);
-		} catch (PropertyVetoException e) {
+			System.out.println("RUN STEP 3");
+//			setMaximum(true);
+			setSize(frameUtils.getSize());
+			setSelected(true);
+			System.out.println("RUN STEP 4");
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}finally{
-			initOK = true;
 		}
-
 	}
 
 	private void setText() {
@@ -121,11 +123,5 @@ public class FUebung extends JInternalFrame implements IGUI {
 	public void stop() {
 		// TODO Auto-generated method stub
 
-	}
-
-
-	@Override
-	public boolean InitOK() {
-		return initOK;
 	}
 }

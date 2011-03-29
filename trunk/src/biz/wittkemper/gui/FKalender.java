@@ -1,21 +1,14 @@
 package biz.wittkemper.gui;
 
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Rectangle;
 import java.beans.PropertyVetoException;
+import java.util.Date;
+
 import javax.swing.GroupLayout;
 import javax.swing.JComponent;
-
-import javax.swing.JDesktopPane;
-import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
-import javax.swing.LayoutStyle;
-import javax.swing.WindowConstants;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
+
 import org.jdesktop.swingx.JXTable;
 import org.jdesktop.swingx.decorator.HighlighterFactory;
 import org.jdesktop.swingx.table.TableColumnExt;
@@ -34,11 +27,14 @@ import biz.wittkemper.gui.tabmodels.KalenderTabModel;
  * ANY CORPORATE OR COMMERCIAL PURPOSE.
  */
 public class FKalender extends javax.swing.JInternalFrame implements IGUI {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JXTable tabkalender;
 	private JScrollPane jScrollPane1;
 	private JLabel jLabel1;
 	private KalenderTabModel kaltab = new KalenderTabModel();
-	private boolean initOK;
 	
 	public FKalender() {
 		super();
@@ -89,31 +85,37 @@ public class FKalender extends javax.swing.JInternalFrame implements IGUI {
 				    .addComponent(jLabel1, GroupLayout.Alignment.LEADING, 0, 739, Short.MAX_VALUE)
 				    .addComponent(jScrollPane1, GroupLayout.Alignment.LEADING, 0, 739, Short.MAX_VALUE))
 				.addContainerGap());
-			setVisible(true);
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("InitGUI: " + new Date());
+			System.out.println(e.getMessage());
 		}
 	}
 
 	@Override
 	public void run() {
-		initOK = false;
+		System.out.println("Run ...");
 		try {
 			loadData();
 			setVisible(true);
 			setMaximum(true);
 		} catch (PropertyVetoException e) {
+			System.out.println("Datum: " + new Date());
 			System.out.println(e.getMessage());
-		}finally{
-			initOK = true;
 		}
 
 	}
 
 	private void loadData() {
+		System.out.println("Lade Daten ...");
+		try{
 		kaltab.setData(DAOFactory.getInstance().getKalenderDAO().getKalender());
 		tabkalender.setModel(kaltab);
-		setColumns();		
+		setColumns();
+		System.out.println("Lade Daten durch ....");
+		}catch (Exception ex){
+			System.out.println("Hier aber ...: " + new Date());
+			System.out.println(ex.getMessage());
+		}
 	}
 
 	private void setColumns() {
@@ -145,11 +147,6 @@ public class FKalender extends javax.swing.JInternalFrame implements IGUI {
 	public void stop() {
 		// TODO Auto-generated method stub
 
-	}
-
-	@Override
-	public boolean InitOK() {
-		return initOK;
 	}
 
 }

@@ -1,18 +1,10 @@
 package biz.wittkemper.utils;
 
-import java.applet.Applet;
-import java.applet.AudioClip;
-import java.awt.HeadlessException;
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.TimeZone;
 import java.util.TimerTask;
 
@@ -32,6 +24,7 @@ public class KonvertMessage extends TimerTask{
 
 	JLabel status ;
 	MeldungsMelder melder ;
+	int zaehler = 0;
 	
 	public KonvertMessage(JLabel status, MeldungsMelder meldungsMelder){
 		this.status = status;
@@ -42,8 +35,12 @@ public class KonvertMessage extends TimerTask{
 		if(status != null)
 			status.setText(text);
 	}
-	@Override
-	public void run(){
+	
+	
+	private boolean meldungen(){
+		
+		boolean lreturn = false;
+		
 		setzeText("Suche neue Meldungen.....");
 		List<Monitord_POSAC> meldungen = DAOFactory.getInstance().getMonitordPOSACDAO().getNewMessages();
 		setzeText(meldungen.size() + " Meldungen gefunden.");
@@ -60,6 +57,7 @@ public class KonvertMessage extends TimerTask{
 			}else{
 				setzeText("Neue Meldung gefunden");
 				trageAlarmEin(mp);
+				lreturn = true;
 			}
 			DAOFactory.getInstance().getMonitordPOSACDAO().delete(mp);
 		}
@@ -67,6 +65,7 @@ public class KonvertMessage extends TimerTask{
 	    DateFormat formater;
 		formater = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM );
 		setzeText("Durchlauf beendet...." + formater.format(cal.getTime()));
+		return lreturn;
 	}
 
 	public void trageAlarmEin(Monitord_POSAC mp) {
@@ -82,17 +81,6 @@ public class KonvertMessage extends TimerTask{
 		alarmierung.setStatus(DAOFactory.getInstance().getPosacStatusDAO().findByStatus(Integer.parseInt(mp.getSub())));
 		
 		DAOFactory.getInstance().getAlarmierungDAO().save(alarmierung);
-		melder.setAenderung(alarmierung);
-		
-		URL url = this.getClass().getResource("Einsatz.wav");
-		try {
-			AudioClip sound = new Applet().newAudioClip(url);
-			sound.play();
-		} catch (Exception e) {
-			System.out.println("Sound läuft ....");
-			e.printStackTrace();
-		} 
-		
 		
 	}
 	
@@ -138,5 +126,23 @@ public class KonvertMessage extends TimerTask{
 		}else{
 			return null;
 		}
+	}
+
+	@Override
+	public void run() {
+		System.out.println("Run Abfrage ..." + new Date());
+		if (meldungen()==true){
+			System.out.println("Löse Alarm aus..." + new Date());
+			melder.setAenderung("ALARM");
+		}else{
+			if (zaehler >=3){
+				zaehler=0;
+				System.out.println("Kein Alarm ..." + new Date());
+				melder.setAenderung("NEXTFRAME");
+			}else{
+				zaehler ++;
+			}
+		}
+		System.out.println("Abfrage Ende ..." + new Date());
 	}
 }
