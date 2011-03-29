@@ -253,13 +253,21 @@ public class FMeldungsDisplay extends javax.swing.JInternalFrame {
 	}
 
 	public void startTimer() {
+		SwingUtilities.invokeLater(new Runnable() {
 
-		TimerTask task = new TimerTask() {
+			@Override
 			public void run() {
-				RefreshMeldung();
+				
+				TimerTask task = new TimerTask() {
+					public void run() {
+						RefreshMeldung();
+					}
+				};
+				t.schedule(task, 0, 4000);
 			}
-		};
-		t.schedule(task, 0, 4000);
+		});
+		
+
 	}
 
 	private void RefreshMeldung() {

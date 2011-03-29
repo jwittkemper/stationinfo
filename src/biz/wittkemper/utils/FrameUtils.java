@@ -60,4 +60,8 @@ public class FrameUtils {
 																			// Tagen
 		return days;
 	}
+	
+	public Dimension getSize(){
+		return Toolkit.getDefaultToolkit().getScreenSize();
+	}
 }

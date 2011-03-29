@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Observable;
 import java.util.Observer;
@@ -21,9 +22,7 @@ import javax.swing.JMenuItem;
 
 import org.jdesktop.swingx.JXStatusBar;
 
-import biz.wittkemper.database.entity.Alarmierung;
 import biz.wittkemper.utils.FrameUtils;
-import biz.wittkemper.utils.InfoTimer;
 import biz.wittkemper.utils.KonvertMessage;
 
 /**
@@ -37,7 +36,7 @@ import biz.wittkemper.utils.KonvertMessage;
  * ANY CORPORATE OR COMMERCIAL PURPOSE.
  */
 public class MainFrame extends javax.swing.JFrame implements WindowListener,
-		ActionListener, Observer {
+		ActionListener, Observer, Serializable {
 	/**
 	 * 
 	 */
@@ -56,9 +55,8 @@ public class MainFrame extends javax.swing.JFrame implements WindowListener,
 	private Timer checkMeldungen = new Timer();
 	private FrameUtils frameUtils = new FrameUtils();
 	MeldungsMelder meldungsMelder = new MeldungsMelder();
-	private Timer nextFrame = new Timer();
-
 	FrameFactory frameFactory = new FrameFactory();
+	private boolean AlarmAktiv = false;
 
 	/**
 	 * Auto-generated main method to display this JFrame
@@ -87,11 +85,7 @@ public class MainFrame extends javax.swing.JFrame implements WindowListener,
 			}
 			dateTime.schedule(new DateTimeTimer(statusDate), 1000, 1000);
 			meldungsMelder.addObserver(this);
-			checkMeldungen.schedule(new KonvertMessage(statusText,
-					meldungsMelder), 2000, 25000);
-
-			nextFrame.schedule(new InfoTimer(meldungsMelder), 5000,
-					(1000 * 60 * 2));
+			startMeldungTimer();
 		}
 		{
 			MainDesktop = new JDesktopPane();
@@ -102,6 +96,11 @@ public class MainFrame extends javax.swing.JFrame implements WindowListener,
 		this.setIconImage(frameUtils.getApplicationIcon());
 		setVisible(true);
 
+	}
+
+	private void startMeldungTimer() {
+		checkMeldungen.schedule(new KonvertMessage(statusText, meldungsMelder),
+				2000, 15000);
 	}
 
 	public void windowClosing(WindowEvent e) {
@@ -198,13 +197,11 @@ public class MainFrame extends javax.swing.JFrame implements WindowListener,
 	}
 
 	private void zeigMeldungen() {
+		AlarmAktiv = true;
 		try {
 			for (Component com : MainDesktop.getComponents()) {
 				if (com instanceof FMeldungsDisplay) {
 					return;
-				} else if (com instanceof JInternalFrame) {
-					System.out.println(com.getName() + " wird für Alarm geschlossen." + new Date());
-					closeInfFrame();
 				}
 			}
 			System.out.println("Alarm kommt " + new Date());
@@ -220,48 +217,66 @@ public class MainFrame extends javax.swing.JFrame implements WindowListener,
 
 	@Override
 	public void update(Observable o, Object arg) {
-		if (arg instanceof Alarmierung) {
-			nextFrame.cancel();
-			zeigMeldungen();
-			
-		} else if (arg instanceof String) {
-			String meldung = arg.toString();
-			if (meldung.equals("ALARMENDE")) {
-				
-				nextFrame = new Timer();				
-				nextFrame.schedule(new InfoTimer(meldungsMelder), 5000,
-						(1000 * 60 * 2));
-			}
-			if (meldung.equals("NEXTFRAME")) {
+		String meldung = arg.toString();
+		JInternalFrame infoFrame;
+		System.out.println("Meldung eingetroffen: " + meldung + " " + new Date());
+		try {
+			if (meldung.equals("ALARM") && AlarmAktiv == false) {
 				closeInfFrame();
-				JInternalFrame newframe = frameFactory.getNextFrame();
-				if (newframe != null) {
-					MainDesktop.add(newframe);
-					if (newframe instanceof IGUI) {
-						((IGUI) newframe).run();
-						System.out.println(newframe.getName() + " gestartet " + new Date());
+				zeigMeldungen();
+
+			} else if (meldung.equals("ALARMENDE")) {
+				AlarmAktiv = false;
+			} else if (meldung.equals("NEXTFRAME") && AlarmAktiv == false) {
+				System.out.println("Step 1");
+				closeInfFrame();
+				System.out.println("Step 2");
+				infoFrame = null;
+				infoFrame = frameFactory.getNextFrame();
+				System.out.println("Step 3");
+				if (infoFrame != null) {
+					System.out.println("Step 4");
+					MainDesktop.add(infoFrame);
+					if (infoFrame instanceof IGUI) {
+						IGUI iframe = (IGUI) infoFrame;
+						System.out.println("Step 5");
+						System.out.println(infoFrame.getName());
+						iframe.run();
+						System.out.println(infoFrame.getName() + " gestartet "
+								+ new Date());
+					}else{
+						System.out.println("Geht nicht ...");
 					}
+					
+				}else{
+					System.out.println("NULL gefunden ...");
 				}
 			}
-
+			else{
+				System.out.println("Komisch ...");
+			}
+		} catch (Exception ex) {
+			System.out.println(ex.getMessage());
 		}
 
 	}
 
 	private void closeInfFrame() {
-		for (Component com : MainDesktop.getComponents()) {
-			if (com instanceof FMeldungsDisplay) {
-				return;
-			} else if (com instanceof IGUI) {
-				System.out.println( com.getName() + " wechsel..." + new Date() );
-				IGUI igui = (IGUI) com;
-				while (igui.InitOK()== false){
-					System.out.println(com.getName() + " warte auf initOK");
+		try {
+			for (Component com : MainDesktop.getComponents()) {
+
+				if (com instanceof JInternalFrame) {
+					System.out.println(com.getName() + " wechsel..."
+							+ new Date());
+					JInternalFrame igui = (JInternalFrame) com;
+					igui.setVisible(false);
+					igui.dispose();
+				}else{
+					System.out.println("Unbekannte Komponente...");
 				}
-				
-				com.setVisible(false);
-				((JInternalFrame) com).dispose();
 			}
+		} catch (Exception ex) {
+			System.out.println(ex.getMessage());
 		}
 	}
 
