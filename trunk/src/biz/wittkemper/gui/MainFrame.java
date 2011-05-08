@@ -100,7 +100,7 @@ public class MainFrame extends javax.swing.JFrame implements WindowListener,
 
 	private void startMeldungTimer() {
 		checkMeldungen.schedule(new KonvertMessage(statusText, meldungsMelder),
-				2000, 15000);
+				2000, 10000);
 	}
 
 	public void windowClosing(WindowEvent e) {
@@ -189,7 +189,6 @@ public class MainFrame extends javax.swing.JFrame implements WindowListener,
 		if (e.getActionCommand().endsWith("eRIC")) {
 			FEditRIC editRIC = new FEditRIC(this);
 			editRIC.setVisible(true);
-			System.out.println("Fenster zu ...");
 		} else if (e.getActionCommand().endsWith("eMeldung")) {
 			zeigMeldungen();
 		}
@@ -204,13 +203,12 @@ public class MainFrame extends javax.swing.JFrame implements WindowListener,
 					return;
 				}
 			}
-			System.out.println("Alarm kommt " + new Date());
 			FMeldungsDisplay display = new FMeldungsDisplay(this,
 					meldungsMelder);
 			display.setSize(MainDesktop.getSize());
 			MainDesktop.add(display);
-		} catch (Exception ex) {
-			System.out.println("Maincall....");
+			} 
+		catch (Exception ex) {
 			System.out.println(ex.getMessage());
 		}
 	}
@@ -219,7 +217,6 @@ public class MainFrame extends javax.swing.JFrame implements WindowListener,
 	public void update(Observable o, Object arg) {
 		String meldung = arg.toString();
 		JInternalFrame infoFrame;
-		System.out.println("Meldung eingetroffen: " + meldung + " " + new Date());
 		try {
 			if (meldung.equals("ALARM") && AlarmAktiv == false) {
 				closeInfFrame();
@@ -228,32 +225,16 @@ public class MainFrame extends javax.swing.JFrame implements WindowListener,
 			} else if (meldung.equals("ALARMENDE")) {
 				AlarmAktiv = false;
 			} else if (meldung.equals("NEXTFRAME") && AlarmAktiv == false) {
-				System.out.println("Step 1");
 				closeInfFrame();
-				System.out.println("Step 2");
 				infoFrame = null;
 				infoFrame = frameFactory.getNextFrame();
-				System.out.println("Step 3");
 				if (infoFrame != null) {
-					System.out.println("Step 4");
 					MainDesktop.add(infoFrame);
 					if (infoFrame instanceof IGUI) {
 						IGUI iframe = (IGUI) infoFrame;
-						System.out.println("Step 5");
-						System.out.println(infoFrame.getName());
 						iframe.run();
-						System.out.println(infoFrame.getName() + " gestartet "
-								+ new Date());
-					}else{
-						System.out.println("Geht nicht ...");
 					}
-					
-				}else{
-					System.out.println("NULL gefunden ...");
 				}
-			}
-			else{
-				System.out.println("Komisch ...");
 			}
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
@@ -266,13 +247,9 @@ public class MainFrame extends javax.swing.JFrame implements WindowListener,
 			for (Component com : MainDesktop.getComponents()) {
 
 				if (com instanceof JInternalFrame) {
-					System.out.println(com.getName() + " wechsel..."
-							+ new Date());
 					JInternalFrame igui = (JInternalFrame) com;
 					igui.setVisible(false);
 					igui.dispose();
-				}else{
-					System.out.println("Unbekannte Komponente...");
 				}
 			}
 		} catch (Exception ex) {

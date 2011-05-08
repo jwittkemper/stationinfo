@@ -130,19 +130,15 @@ public class KonvertMessage extends TimerTask{
 
 	@Override
 	public void run() {
-		System.out.println("Run Abfrage ..." + new Date());
 		if (meldungen()==true){
-			System.out.println("Löse Alarm aus..." + new Date());
 			melder.setAenderung("ALARM");
 		}else{
-			if (zaehler >=3){
+			if (zaehler >=10){
 				zaehler=0;
-				System.out.println("Kein Alarm ..." + new Date());
 				melder.setAenderung("NEXTFRAME");
 			}else{
 				zaehler ++;
 			}
 		}
-		System.out.println("Abfrage Ende ..." + new Date());
 	}
 }

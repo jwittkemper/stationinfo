@@ -22,11 +22,10 @@ public class FrameFactory {
 		
 		currentFrame ++;
 		if (currentFrame > frames.size()){
-			currentFrame =0;
+			currentFrame =1;
 		}
 		switch (currentFrame)
 		{
-			case 0: return null;
 			
 			case 1: return  new FKalender();
 			
