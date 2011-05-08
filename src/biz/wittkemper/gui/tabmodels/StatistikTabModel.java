@@ -72,6 +72,9 @@ public class StatistikTabModel extends AbstractTableModel {
 	}
 
 	private String getDateTime(Date date){
+		if (date == null){
+			return "";
+		}
 		DateFormat formater;
 		formater = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT );
 		return formater.format(date);
