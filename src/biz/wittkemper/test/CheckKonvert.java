@@ -13,8 +13,19 @@ import org.junit.Test;
 import biz.wittkemper.database.dao.DAOFactory;
 import biz.wittkemper.database.entity.Alarmierung;
 import biz.wittkemper.utils.KonvertMessage;
+import biz.wittkemper.utils.Utils;
+import biz.wittkemper.utils.Utils.STATIONPROP;
 
 public class CheckKonvert {
+	
+	@Test
+	public void Propertest(){
+		Utils ut = new Utils();
+		
+		Utils.storePropertie(STATIONPROP.DATABASE, "localhost");
+		Utils.storePropertie(STATIONPROP.MASTER, "false");
+		System.out.println(Utils.getPropertie(STATIONPROP.DATABASE));
+	}
 
 	@Ignore
 	public void cheAlarm(){
@@ -30,7 +41,7 @@ public class CheckKonvert {
 		konvertMessage.run();
 	}
 	
-	@Test
+	@Ignore
 	public void cheSound(){
 		File file = new File("/home/joerg/Develop/StationInfoSystem/picture/pager.wav");
 		try {
