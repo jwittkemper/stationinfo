@@ -60,16 +60,11 @@ public class FUebung extends JInternalFrame implements IGUI {
 	
 	@Override
 	public void run() {
-		System.out.println("RUN STEP 1");
 		setText();
-		System.out.println("RUN STEP 2");
 		setVisible(true);
 		try {
-			System.out.println("RUN STEP 3");
-//			setMaximum(true);
 			setSize(frameUtils.getSize());
 			setSelected(true);
-			System.out.println("RUN STEP 4");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

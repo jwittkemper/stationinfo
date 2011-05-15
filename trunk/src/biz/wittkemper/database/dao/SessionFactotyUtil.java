@@ -1,8 +1,13 @@
 package biz.wittkemper.database.dao;
 
+import java.util.Properties;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AnnotationConfiguration;
+
+import biz.wittkemper.utils.Utils;
+import biz.wittkemper.utils.Utils.STATIONPROP;
 
 public class SessionFactotyUtil {
 
@@ -14,7 +19,23 @@ public class SessionFactotyUtil {
 	}
 
 	static{
-		sessionFactory = new AnnotationConfiguration().configure().buildSessionFactory();
+		String db = Utils.getPropertie(STATIONPROP.DATABASE);
+		
+		Properties properties = new Properties();
+		properties.setProperty("hibernate.connection.url", "jdbc:mysql://"+ db.trim() + "/monitord");
+		sessionFactory = new AnnotationConfiguration()
+			.addProperties(properties)
+			.setProperty("hibernate.connection.username", "monitord")
+			.setProperty("hibernate.connection.password", "monitord")
+			
+			.addAnnotatedClass(biz.wittkemper.database.entity.Kennung.class)
+			.addAnnotatedClass(biz.wittkemper.database.entity.Posac_status.class)
+			.addAnnotatedClass(biz.wittkemper.database.entity.Monitord_POSAC.class)
+			.addAnnotatedClass(biz.wittkemper.database.entity.Alarmierung.class)
+			.addAnnotatedClass(biz.wittkemper.database.entity.KalenderTyp.class)
+			.addAnnotatedClass(biz.wittkemper.database.entity.Kalender.class)
+			.configure().buildSessionFactory();
+		
 	}
 
 	public static SessionFactory getInstance() {

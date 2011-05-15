@@ -80,6 +80,11 @@ public class KennungDAOImpl extends AbstractDAOImpl<Kennung, Long> implements
 					auswertung.set(i, auswertung.get(j));
 					auswertung.set(j, k);
 				}
+				if (auswertung.get(i).getLetzteMeldung() == null && auswertung.get(j).getLetzteMeldung() != null){
+					KennungStatisik k = auswertung.get(i);
+					auswertung.set(i, auswertung.get(j));
+					auswertung.set(j, k);
+				}
 			}
 		}
 		return auswertung;

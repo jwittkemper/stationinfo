@@ -19,126 +19,145 @@ import biz.wittkemper.database.dao.SessionFactotyUtil;
 import biz.wittkemper.database.entity.Alarmierung;
 import biz.wittkemper.database.entity.Monitord_POSAC;
 import biz.wittkemper.gui.MeldungsMelder;
+import biz.wittkemper.utils.Utils.STATIONPROP;
 
-public class KonvertMessage extends TimerTask{
+public class KonvertMessage extends TimerTask {
 
-	JLabel status ;
-	MeldungsMelder melder ;
+	JLabel status;
+	MeldungsMelder melder;
 	int zaehler = 0;
-	
-	public KonvertMessage(JLabel status, MeldungsMelder meldungsMelder){
+	private boolean master = true;
+
+	public KonvertMessage(JLabel status, MeldungsMelder meldungsMelder) {
 		this.status = status;
 		this.melder = meldungsMelder;
+		this.master = checkMaster();
 	}
-	
-	private void setzeText(String text){
-		if(status != null)
+
+	private boolean checkMaster() {
+		String lmaster = Utils.getPropertie(STATIONPROP.MASTER);
+		if (lmaster != null && lmaster.equalsIgnoreCase("false")) {
+			return false;
+		}
+		return true;
+	}
+
+	private void setzeText(String text) {
+		if (status != null)
 			status.setText(text);
 	}
-	
-	
-	private boolean meldungen(){
-		
+
+	private boolean meldungen() {
+
 		boolean lreturn = false;
-		
+
 		setzeText("Suche neue Meldungen.....");
-		List<Monitord_POSAC> meldungen = DAOFactory.getInstance().getMonitordPOSACDAO().getNewMessages();
+		List<Monitord_POSAC> meldungen = DAOFactory.getInstance()
+				.getMonitordPOSACDAO().getNewMessages();
 		setzeText(meldungen.size() + " Meldungen gefunden.");
-		for (Monitord_POSAC mp: meldungen){
+		for (Monitord_POSAC mp : meldungen) {
 			Alarmierung alarmierung = checkAlarmierung(mp);
-			if(alarmierung != null){
-				if (alarmierung.getEot() == false){
-					if(alarmierung.getText().length() < mp.getText().length()){
+			if (alarmierung != null) {
+				if (alarmierung.getEot() == false) {
+					if (alarmierung.getText().length() < mp.getText().length()) {
 						alarmierung.setText(mp.getText());
 						chekEOT(mp, alarmierung);
-						DAOFactory.getInstance().getAlarmierungDAO().update(alarmierung);
+						DAOFactory.getInstance().getAlarmierungDAO().update(
+								alarmierung);
 					}
 				}
-			}else{
+			} else {
 				setzeText("Neue Meldung gefunden");
 				trageAlarmEin(mp);
 				lreturn = true;
 			}
 			DAOFactory.getInstance().getMonitordPOSACDAO().delete(mp);
 		}
-		Calendar cal = new GregorianCalendar( TimeZone.getTimeZone("ECT") );
-	    DateFormat formater;
-		formater = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM );
+		Calendar cal = new GregorianCalendar(TimeZone.getTimeZone("ECT"));
+		DateFormat formater;
+		formater = DateFormat.getDateTimeInstance(DateFormat.SHORT,
+				DateFormat.MEDIUM);
 		setzeText("Durchlauf beendet...." + formater.format(cal.getTime()));
 		return lreturn;
 	}
 
 	public void trageAlarmEin(Monitord_POSAC mp) {
 		Alarmierung alarmierung = new Alarmierung();
-		alarmierung.setKennung(DAOFactory.getInstance().getKennungDAO().load(Long.parseLong(mp.getKennung())));
-		if (alarmierung.getKennung().getAusblenden()== true){
+		alarmierung.setKennung(DAOFactory.getInstance().getKennungDAO().load(
+				Long.parseLong(mp.getKennung())));
+		if (alarmierung.getKennung().getAusblenden() == true) {
 			alarmierung.setText("");
-		}else {
+		} else {
 			alarmierung.setText(mp.getText());
 		}
 		alarmierung.setUhrzeit(mp.getUhrzeit());
 		chekEOT(mp, alarmierung);
-		alarmierung.setStatus(DAOFactory.getInstance().getPosacStatusDAO().findByStatus(Integer.parseInt(mp.getSub())));
-		
+		alarmierung.setStatus(DAOFactory.getInstance().getPosacStatusDAO()
+				.findByStatus(Integer.parseInt(mp.getSub())));
+
 		DAOFactory.getInstance().getAlarmierungDAO().save(alarmierung);
-		
+
 	}
-	
+
 	private void chekEOT(Monitord_POSAC mp, Alarmierung alarmierung) {
-		if (mp.getText().indexOf("<EOT>") > 0){
+		if (mp.getText().indexOf("<EOT>") > 0) {
 			alarmierung.setText(alarmierung.getText().replaceAll("<EOT>", ""));
 			alarmierung.setEot(true);
-		}else{
+		} else {
 			alarmierung.setEot(false);
 		}
 	}
+
 	private Alarmierung checkAlarmierung(Monitord_POSAC mp) {
 		Calendar calendar = new GregorianCalendar();
-		
+
 		StringBuffer hql = new StringBuffer(" From Alarmierung a Where ");
-		
+
 		calendar.setTime(mp.getUhrzeit());
 		calendar.add(Calendar.MINUTE, -2);
 		Date minDate = calendar.getTime();
 		calendar.add(Calendar.MINUTE, +4);
 		Date maxDate = calendar.getTime();
-		
-		
+
 		hql.append("a.uhrzeit >= :startDate");
 
 		hql.append(" AND ");
 		hql.append("a.uhrzeit <= :endDate");
-		
+
 		hql.append(" AND a.kennung.ric = " + mp.getKennung());
 		hql.append(" AND a.status.posac_status = " + mp.getSub());
-		
+
 		Session session = SessionFactotyUtil.getInstance().getCurrentSession();
 		Transaction trx = session.beginTransaction();
-		
+
 		Query query = session.createQuery(hql.toString());
 		query.setParameter("startDate", minDate);
 		query.setParameter("endDate", maxDate);
-		
+
 		List<Alarmierung> list = query.list();
 		trx.commit();
-		if (list.size()> 0){
+		if (list.size() > 0) {
 			return list.get(0);
-		}else{
+		} else {
 			return null;
 		}
 	}
 
 	@Override
 	public void run() {
-		if (meldungen()==true){
-			melder.setAenderung("ALARM");
-		}else{
-			if (zaehler >=10){
-				zaehler=0;
-				melder.setAenderung("NEXTFRAME");
-			}else{
-				zaehler ++;
+		if (master) {
+			if (meldungen() == true) {
+				melder.setAenderung("ALARM");
+			} else {
+				if (zaehler >= 10) {
+					zaehler = 0;
+					melder.setAenderung("NEXTFRAME");
+				} else {
+					zaehler++;
+				}
 			}
+		} else {
+
 		}
 	}
 }
