@@ -15,6 +15,11 @@ import org.jdesktop.swingx.table.TableColumnExt;
 
 import biz.wittkemper.database.dao.DAOFactory;
 import biz.wittkemper.gui.tabmodels.KalenderTabModel;
+import biz.wittkemper.utils.Utils;
+
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 
 /**
  * This code was edited or generated using CloudGarden's Jigloo SWT/Swing GUI
@@ -35,11 +40,51 @@ public class FKalender extends javax.swing.JInternalFrame implements IGUI {
 	private JScrollPane jScrollPane1;
 	private JLabel jLabel1;
 	private KalenderTabModel kaltab = new KalenderTabModel();
+	private JMenuBar menuBar;
+	private JMenu mnDatei;
+	private JMenuItem mntmSchliessen;
+	private JMenu mnBearbeiten;
+	private JMenuItem mntmNeuerEintrag;
+	private JMenuItem mntmEintragndern;
+	private JMenuItem mntmEintragLschen;
 	
 	public FKalender() {
 		super();
 		setName("FKalender");
+		{
+			menuBar = new JMenuBar();
+			setJMenuBar(menuBar);
+			{
+				mnDatei = new JMenu("Datei");
+				menuBar.add(mnDatei);
+				{
+					mntmSchliessen = new JMenuItem("schliessen");
+					mnDatei.add(mntmSchliessen);
+				}
+			}
+			{
+				mnBearbeiten = new JMenu("bearbeiten");
+				menuBar.add(mnBearbeiten);
+				{
+					mntmEintragndern = new JMenuItem("Eintrag ändern");
+					mnBearbeiten.add(mntmEintragndern);
+				}
+				{
+					mntmEintragLschen = new JMenuItem("Eintrag löschen");
+					mnBearbeiten.add(mntmEintragLschen);
+				}
+				{
+					mntmNeuerEintrag = new JMenuItem("neuer Eintrag");
+					mnBearbeiten.add(mntmNeuerEintrag);
+				}
+			}
+		}
 		initGUI();
+		if (Utils.checkMaster()){
+			menuBar.setVisible(false);
+		}else{
+			menuBar.setVisible(true);
+		}
 	}
 
 	private void initGUI() {

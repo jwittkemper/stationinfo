@@ -2,6 +2,7 @@ package biz.wittkemper.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Frame;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -24,6 +25,10 @@ import org.jdesktop.swingx.JXStatusBar;
 
 import biz.wittkemper.utils.FrameUtils;
 import biz.wittkemper.utils.KonvertMessage;
+import biz.wittkemper.utils.Utils;
+import biz.wittkemper.utils.Utils.STATIONPROP;
+import java.awt.Dimension;
+import java.awt.Color;
 
 /**
  * This code was edited or generated using CloudGarden's Jigloo SWT/Swing GUI
@@ -44,6 +49,7 @@ public class MainFrame extends javax.swing.JFrame implements WindowListener,
 	private JMenuBar mbMain;
 	private JMenu mFile;
 	private JDesktopPane MainDesktop;
+	private JMenuItem mnCalendar;
 	private JMenuItem mRIC;
 	private JMenuItem mnMeldung;
 	private JMenu Edit;
@@ -73,12 +79,14 @@ public class MainFrame extends javax.swing.JFrame implements WindowListener,
 			statusBar.setPreferredSize(new java.awt.Dimension(390, 19));
 			{
 				statusText = new JLabel();
+				statusText.setBackground(Color.YELLOW);
 				statusBar.add(statusText);
 				statusText.setText("");
 				statusText.setPreferredSize(new java.awt.Dimension(638, 11));
 			}
 			{
 				statusDate = new JLabel();
+				statusDate.setBackground(Color.ORANGE);
 				statusBar.add(statusDate);
 				statusDate.setText("Date");
 				statusDate.setPreferredSize(new java.awt.Dimension(228, 11));
@@ -94,7 +102,9 @@ public class MainFrame extends javax.swing.JFrame implements WindowListener,
 		}
 
 		this.setIconImage(frameUtils.getApplicationIcon());
+		setExtendedState(Frame.MAXIMIZED_BOTH);
 		setVisible(true);
+		
 
 	}
 
@@ -155,6 +165,18 @@ public class MainFrame extends javax.swing.JFrame implements WindowListener,
 					mbMain.add(Edit);
 					Edit.setText("Bearbeiten");
 					{
+						mnCalendar = new JMenuItem();
+						Edit.add(mnCalendar);
+						mnCalendar.setText("Kalender");
+						mnCalendar.setActionCommand("eCalendar");
+						mnCalendar.addActionListener(this);
+						if (Utils.getPropertie(STATIONPROP.MASTER).equals("false")){
+							mnCalendar.setEnabled(true);
+						}else{
+							mnCalendar.setEnabled(false);
+						}
+					}
+					{
 						mRIC = new JMenuItem();
 						Edit.add(mRIC);
 						mRIC.setText("RIC");
@@ -172,7 +194,7 @@ public class MainFrame extends javax.swing.JFrame implements WindowListener,
 			}
 			pack();
 			this.setSize(713, 331);
-			setSize(Toolkit.getDefaultToolkit().getScreenSize());
+			setSize(new Dimension(746, 360));
 			repaint();
 		} catch (Exception e) {
 			// add your error handling code here
@@ -191,8 +213,17 @@ public class MainFrame extends javax.swing.JFrame implements WindowListener,
 			editRIC.setVisible(true);
 		} else if (e.getActionCommand().endsWith("eMeldung")) {
 			zeigMeldungen();
+		} else if (e.getActionCommand().endsWith("eCalendar")) {
+			zeigKalender();
 		}
 
+	}
+
+	private void zeigKalender() {
+		FKalender kalender = new FKalender();
+		MainDesktop.add(kalender);
+		kalender.setSize(MainDesktop.getSize());
+		kalender.run();
 	}
 
 	private void zeigMeldungen() {

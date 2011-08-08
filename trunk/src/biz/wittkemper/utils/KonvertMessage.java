@@ -31,15 +31,7 @@ public class KonvertMessage extends TimerTask {
 	public KonvertMessage(JLabel status, MeldungsMelder meldungsMelder) {
 		this.status = status;
 		this.melder = meldungsMelder;
-		this.master = checkMaster();
-	}
-
-	private boolean checkMaster() {
-		String lmaster = Utils.getPropertie(STATIONPROP.MASTER);
-		if (lmaster != null && lmaster.equalsIgnoreCase("false")) {
-			return false;
-		}
-		return true;
+		this.master = Utils.checkMaster();
 	}
 
 	private void setzeText(String text) {
